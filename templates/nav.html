@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+            <i class="bi bi-lungs"></i> LungAI
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('add_patient') }}">Add Patient</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('search_patients') }}">Patient Search</a>
+                </li>
+            </ul>
+            <form class="d-flex me-3" action="{{ url_for('search_patients') }}" method="GET">
+                <input class="form-control me-2" type="search" name="query" placeholder="Search patients">
+                <button class="btn btn-outline-light" type="submit">Search</button>
+            </form>
+            <div class="navbar-text">
+                {% if 'user' in session %}
+                    <span class="me-3">Welcome, {{ session['user'] }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-light">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-sm btn-outline-light me-2">Login</a>
+                    <a href="{{ url_for('signup') }}" class="btn btn-sm btn-light">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

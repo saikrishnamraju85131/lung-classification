@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Patient Search</h2>
+    
+    <form class="mb-4" action="{{ url_for('search_patients') }}" method="GET">
+        <div class="input-group">
+            <input type="text" class="form-control" name="query" placeholder="Search by name or phone" value="{{ request.args.get('query', '') }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+    
+    {% if patients %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>{{ patient.id }}</td>
+                        <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+                        <td>{{ patient.age }}</td>
+                        <td>{{ patient.gender }}</td>
+                        <td>{{ patient.phone }}</td>
+                        <td>
+                            <a href="{{ url_for('patient_details', patient_id=patient.id) }}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                            <a href="{{ url_for('classify', patient_id=patient.id) }}" class="btn btn-sm btn-success">
+                                <i class="bi bi-heart-pulse"></i> Classify
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            No patients found. Try a different search or <a href="{{ url_for('add_patient') }}">add a new patient</a>.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

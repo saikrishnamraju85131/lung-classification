@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    {% if patient.photo %}
+    <img src="{{ url_for('uploaded_file', filename=patient.photo) }}" 
+         class="img-fluid rounded-circle mb-3" 
+         style="width: 200px; height: 200px; object-fit: cover;">
+{% else %}
+    <img src="{{ url_for('static', filename='images/default-patient.jpg') }}" 
+         class="img-fluid rounded-circle mb-3" 
+         style="width: 200px; height: 200px; object-fit: cover;">
+{% endif %}
+
+                    <h3>{{ patient.first_name }} {{ patient.last_name }}</h3>
+                    <p class="text-muted">Patient ID: {{ patient.id }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Patient Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Age:</strong> {{ patient.age }}</p>
+                            <p><strong>Gender:</strong> {{ patient.gender }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Phone:</strong> {{ patient.phone }}</p>
+                            <p><strong>Registered:</strong> {{ patient.registration_date.strftime('%Y-%m-%d') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4>Diagnosis History</h4>
+                    <a href="{{ url_for('classify', patient_id=patient.id) }}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus"></i> New Analysis
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if patient.recordings %}
+                    <div class="list-group">
+                        {% for recording in patient.recordings %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5>{{ recording.diagnosis.result if recording.diagnosis else 'No diagnosis' }}</h5>
+                                    <small class="text-muted">
+                                        {{ recording.recording_date.strftime('%Y-%m-%d %H:%M') }}
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    {% if recording.diagnosis %}
+                                        <span class="badge bg-{{ 'success' if recording.diagnosis.result == 'Healthy' else 'warning' }}">
+                                            {{ recording.diagnosis.confidence }}% confidence
+                                        </span>
+                                        <form method="POST" action="{{ url_for('delete_diagnosis', diagnosis_id=recording.diagnosis.id) }}" onsubmit="return confirm('Are you sure you want to delete this diagnosis?');" style="display: inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger mt-1">Delete</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% else %}
+                        <div class="alert alert-info">
+                            No recordings found for this patient.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

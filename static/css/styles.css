@@ -1,0 +1,39 @@
+body {
+    background-color: #f8f9fa;
+    padding-top: 60px;
+}
+
+.main-content {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.patient-info {
+    border-left: 4px solid #0d6efd;
+}
+
+.bg-primary {
+    background-color: #1a4b7a !important;
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+.table th {
+    background-color: #f1f8ff;
+}
+
+.img-thumbnail {
+    max-width: 150px;
+}
+
+@media (max-width: 768px) {
+    .patient-info {
+        margin-top: 20px;
+    }
+}

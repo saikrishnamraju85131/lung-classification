@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h2 class="mb-4">Register New Patient</h2>
+                <form method="POST" action="{{ url_for('add_patient') }}" enctype="multipart/form-data">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="age" name="age" min="0" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select" id="gender" name="gender" required>
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="photo" class="form-label">Patient Photo</label>
+                        <input class="form-control" type="file" id="photo" name="photo" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-sm btn-secondary mb-2" onclick="toggleCamera()">Use Webcam</button>
+                        <div id="cameraContainer" style="display: none;">
+                            <video id="video" width="100%" autoplay playsinline class="mb-2 rounded border"></video>
+                            <button type="button" class="btn btn-sm btn-success mb-2" onclick="capturePhoto()">Capture Photo</button>
+                            <canvas id="canvas" style="display:none;"></canvas>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Register Patient</button>
+                        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let videoStream;
+    
+    function toggleCamera() {
+        const container = document.getElementById('cameraContainer');
+        if (container.style.display === 'none') {
+            container.style.display = 'block';
+            startCamera();
+        } else {
+            container.style.display = 'none';
+            stopCamera();
+        }
+    }
+    
+    function startCamera() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                videoStream = stream;
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                alert("Camera access denied or not available.");
+                console.error(err);
+            });
+    }
+    
+    function stopCamera() {
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+        }
+    }
+    
+    function capturePhoto() {
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0);
+    
+        canvas.toBlob(blob => {
+            const file = new File([blob], `webcam_${Date.now()}.png`, { type: 'image/png' });
+    
+            // Replace the file input with the webcam file
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            document.getElementById('photo').files = dataTransfer.files;
+    
+            alert("Photo captured! You can now submit the form.");
+            stopCamera();
+            document.getElementById('cameraContainer').style.display = 'none';
+        });
+    }
+    </script>
+    
+{% endblock %}

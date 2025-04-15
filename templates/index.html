@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body p-5 text-center">
+                <h1 class="mb-4">Welcome to Lung Disease Classification</h1>
+                <p class="lead mb-5">A system for detecting lung diseases from audio recordings</p>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <i class="bi bi-person-plus fs-1 text-primary mb-3"></i>
+                                <h3>Add New Patient</h3>
+                                <p>Register a new patient in the system</p>
+                                <a href="{{ url_for('add_patient') }}" class="btn btn-primary">Add Patient</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <i class="bi bi-search fs-1 text-primary mb-3"></i>
+                                <h3>Patient Search</h3>
+                                <p>Find existing patient records</p>
+                                <a href="{{ url_for('search_patients') }}" class="btn btn-primary">Search Patients</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

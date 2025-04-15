@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h2 class="mb-4">Classify Lung Sounds</h2>
+                <div class="patient-info mb-4 p-3 bg-light rounded">
+                    <h4>Patient: {{ patient.first_name }} {{ patient.last_name }}</h4>
+                    <p>Age: {{ patient.age }} | Gender: {{ patient.gender }}</p>
+                    <p>Patient ID: {{ patient.id }}</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('classify', patient_id=patient.id) }}" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="audio" class="form-label">Upload Lung Sound Recording (.wav)</label>
+                        <input class="form-control" type="file" id="audio" name="audio" accept=".wav" required>
+                        <div class="form-text">Please upload a high-quality recording of lung sounds</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-heart-pulse"></i> Analyze Recording
+                        </button>
+                        <a href="{{ url_for('patient_details', patient_id=patient.id) }}" class="btn btn-outline-secondary">
+                            View Patient Details
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
